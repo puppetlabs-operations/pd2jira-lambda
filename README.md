@@ -5,6 +5,7 @@ An AWS lambda function to handle webhooks received from PagerDuty through the AW
 Create a virtualenv in the project directory and run the build script. It will produce as zip file that you will then upload to AWS.
 ```
 virtualenv .
+mkdir build
 ./build.sh
 ```
 
