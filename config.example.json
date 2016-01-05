@@ -1,6 +1,7 @@
 {
+    "jira_url": "https://jira.example.com",
     "jira_user": "pagerduty",
     "jira_password": "example",
     "jira_project": "OPS",
-    "jira_ticket_type": "Incident",
+    "jira_ticket_type": "Incident"
 }
