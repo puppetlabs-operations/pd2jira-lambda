@@ -13,7 +13,8 @@ summary_host_template = """
 Host/zone {host} is {state}
 """
 description_template = """
-Add the description as needed.
+Incident URL:
+{incident_url}
 """
 
 
@@ -29,13 +30,7 @@ def lambda_handler(event, context):
                 issue_summary = summary_service_template.format(servicedesc=message['data']['incident']['trigger_summary_data']['SERVICEDESC'],
                                                                 host=message['data']['incident']['trigger_summary_data']['HOSTNAME'],
                                                                 state=message['data']['incident']['trigger_summary_data']['SERVICESTATE'])
-                issue_description = description_template
-
-            if message['data']['incident']['trigger_summary_data']['pd_nagios_object'] == 'host':
-                issue_summary = summary_host_template.format(servicedesc=message['data']['incident']['trigger_summary_data']['SERVICEDESC'],
-                                                             host=message['data']['incident']['trigger_summary_data']['HOSTNAME'],
-                                                             state=message['data']['incident']['trigger_summary_data']['HOSTSTATE'])
-                issue_description = description_template
+                issue_description = description_template.format(incident_url=message['data']['incident']['html_url'])
             try:
                 incident_ticket = jira.create_issue(project=config['jira_project'],
                                                     summary=issue_summary,
