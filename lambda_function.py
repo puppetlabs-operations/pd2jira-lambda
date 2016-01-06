@@ -32,9 +32,14 @@ def lambda_handler(event, context):
                                                                 state=message['data']['incident']['trigger_summary_data']['SERVICESTATE'])
                 issue_description = description_template.format(incident_url=message['data']['incident']['html_url'])
             try:
-                incident_ticket = jira.create_issue(project=config['jira_project'],
-                                                    summary=issue_summary,
-                                                    description=issue_description,
-                                                    issuetype={'name': config['jira_ticket_type']})
+                existing_issue = jira.search_issues('project={proj} AND type={ticket_type} AND status != Closed AND summary ~ "{summary}"'.format(
+                    proj=config['jira_project'],
+                    ticket_type=config['jira_ticket_type'],
+                    summary=issue_summary))
+                if len(existing_issue) == 0:
+                    incident_ticket = jira.create_issue(project=config['jira_project'],
+                                                        summary=issue_summary,
+                                                        description=issue_description,
+                                                        issuetype={'name': config['jira_ticket_type']})
             except jira.JIRAError as e:
                 print(e.text)
